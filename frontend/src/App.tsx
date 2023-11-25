@@ -4,6 +4,7 @@ import Searchbox from './components/Searchbox';
 import SkillsDisplay from './components/SkillsDisplay';
 import Skillsbox from './components/Skillsbox';
 import JobsTable, { JobItem } from './components/JobsTable';
+import { SkillitemProps } from './components/Skillitem';
 
 const App = () => {
   // create an example array of JobItems
@@ -33,6 +34,17 @@ const App = () => {
       skills: ['React', 'TypeScript', 'Node.js', 'MongoDB'],
     },
   ];
+  // sample skills
+  const skills: SkillitemProps[] = [
+    { skill: 'Python', level: 'Senior' },
+    { skill: 'React', level: 'Mid' },
+    { skill: 'Django', level: 'Junior' },
+    { skill: 'Flask', level: 'Junior' },
+    { skill: 'Node.js', level: 'Mid' },
+    { skill: 'Express', level: 'Mid' },
+    { skill: 'MongoDB', level: 'Mid' },
+    { skill: 'PostgreSQL', level: 'Mid' },
+  ];
 
   return (
     <Stack
@@ -42,7 +54,7 @@ const App = () => {
       <Searchbox />
       <Divider />
       <Skillsbox />
-      <SkillsDisplay />
+      <SkillsDisplay skills={skills} />
       <Divider />
       <JobsTable jobs={jobs} />
     </Stack>

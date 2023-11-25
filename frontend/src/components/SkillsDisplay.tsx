@@ -2,19 +2,11 @@ import { Grid, Paper } from '@mui/material';
 import React from 'react';
 import Skillitem, { SkillitemProps } from './Skillitem';
 
-export default function SkillsDisplay() {
-  // sample skills
-  const skills: SkillitemProps[] = [
-    { skill: 'Python', level: 'Senior' },
-    { skill: 'React', level: 'Mid' },
-    { skill: 'Django', level: 'Junior' },
-    { skill: 'Flask', level: 'Junior' },
-    { skill: 'Node.js', level: 'Mid' },
-    { skill: 'Express', level: 'Mid' },
-    { skill: 'MongoDB', level: 'Mid' },
-    { skill: 'PostgreSQL', level: 'Mid' },
-  ];
+type SkillsDisplayProps = {
+  skills: SkillitemProps[];
+};
 
+export default function SkillsDisplay({ skills }: SkillsDisplayProps) {
   return (
     <Paper sx={{ marginTop: '16px', marginBottom: '30px' }}>
       <Grid
