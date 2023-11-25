@@ -6,7 +6,9 @@ export default function Banner() {
     <div>
       <AppBar>
         <Toolbar>
-          <Typography variant="h4" sx={{margin: 'auto'}}>SkillSynch</Typography>
+          <Typography variant="h4" sx={{ margin: 'auto' }}>
+            SkillSynch
+          </Typography>
         </Toolbar>
       </AppBar>
       <Toolbar />

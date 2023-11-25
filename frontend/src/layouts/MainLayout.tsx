@@ -1,9 +1,9 @@
-import React from "react";
-import Banner from "../components/Banner";
+import React from 'react';
+import Banner from '../components/Banner';
 
 type Props = {
   children: React.ReactNode;
-  };
+};
 
 export default function MainLayout({ children }: Props) {
   return (
@@ -11,5 +11,5 @@ export default function MainLayout({ children }: Props) {
       <Banner />
       {children}
     </div>
-  )
+  );
 }
