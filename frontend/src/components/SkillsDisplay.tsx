@@ -1,10 +1,7 @@
 import { Grid, Paper } from '@mui/material';
 import React from 'react';
-import Skillitem, { Skillitem as SkillitemType } from './Skillitem';
-
-type SkillsDisplayProps = {
-  skills: SkillitemType[];
-};
+import Skillitem from './Skillitem';
+import { SkillsDisplayProps } from '../types';
 
 export default function SkillsDisplay({ skills }: SkillsDisplayProps) {
   return (

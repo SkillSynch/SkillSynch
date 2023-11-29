@@ -3,8 +3,8 @@ import { Divider, Stack } from '@mui/material';
 import Searchbox from './components/Searchbox';
 import SkillsDisplay from './components/SkillsDisplay';
 import Skillsbox from './components/Skillsbox';
-import JobsTable, { JobItem } from './components/JobsTable';
-import { Skillitem } from './components/Skillitem';
+import JobsTable from './components/JobsTable';
+import { JobItem, SkillItem } from './types';
 
 const App = () => {
   // create an example array of JobItems
@@ -59,7 +59,7 @@ const App = () => {
     },
   ];
   // sample skills
-  const skills: Skillitem[] = [
+  const skills: SkillItem[] = [
     { skill: 'Python', level: 'Senior' },
     { skill: 'React', level: 'Mid' },
     { skill: 'Django', level: 'Junior' },

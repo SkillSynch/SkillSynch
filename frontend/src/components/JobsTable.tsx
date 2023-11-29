@@ -8,20 +8,10 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
-import { Skillitem } from './Skillitem';
+
+import { JobItem } from '../types';
 
 import JobDetails from './JobDetails';
-
-export type JobItem = {
-  match: number;
-  title: string;
-  company: string;
-  location: string;
-  salary: string;
-  skills: Skillitem[];
-  url: string;
-  about?: string;
-};
 
 export default function JobsTable({ jobs }: { jobs: JobItem[] }) {
   return (
