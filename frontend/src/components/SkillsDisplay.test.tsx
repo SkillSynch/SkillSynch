@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import SkillsDisplay from './SkillsDisplay';
-import { Skillitem } from './Skillitem';
+import { SkillItem } from '../types';
 import { describe, it, expect } from 'vitest';
 
 describe('SkillsDisplay', () => {
   // sample skills
-  const skills: Skillitem[] = [
+  const skills: SkillItem[] = [
     { skill: 'Python', level: 'Senior' },
     { skill: 'React', level: 'Mid' },
     { skill: 'Django', level: 'Junior' },
