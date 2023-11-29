@@ -1,12 +1,12 @@
 import { Grid, Typography } from '@mui/material';
 import React from 'react';
 
-export type SkillitemProps = {
+export type Skillitem = {
   skill: string;
   level: 'Junior' | 'Mid' | 'Senior';
 };
 
-const Skillitem: React.FC<SkillitemProps> = ({ skill, level }) => {
+const Skillitem: React.FC<Skillitem> = ({ skill, level }) => {
   return (
     <>
       <Grid item xs={6} sm={3}>

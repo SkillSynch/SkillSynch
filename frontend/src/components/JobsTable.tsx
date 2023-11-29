@@ -8,6 +8,9 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
+import { Skillitem } from './Skillitem';
+
+import JobDetails from './JobDetails';
 
 export type JobItem = {
   match: number;
@@ -15,7 +18,9 @@ export type JobItem = {
   company: string;
   location: string;
   salary: string;
-  skills: string[];
+  skills: Skillitem[];
+  url: string;
+  about?: string;
 };
 
 export default function JobsTable({ jobs }: { jobs: JobItem[] }) {
@@ -41,7 +46,9 @@ export default function JobsTable({ jobs }: { jobs: JobItem[] }) {
               <TableCell>{job.company}</TableCell>
               <TableCell>{job.location}</TableCell>
               <TableCell>{job.salary}</TableCell>
-              <TableCell>Details</TableCell>
+              <TableCell>
+                <JobDetails jobItem={job} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
