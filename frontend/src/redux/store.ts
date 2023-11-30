@@ -23,11 +23,25 @@ const appSlice = createSlice({
     addSkill: (state, action: PayloadAction<SkillItem>) => {
       state.skills = [...state.skills, action.payload];
     },
+    updateSkill: (state, action: PayloadAction<SkillItem>) => {
+      // create copy of skills state
+      const skillsCopy: SkillItem[] = [...state.skills];
+      // find index where skill should be updated
+      const index: number = skillsCopy.findIndex(skill => skill.skill === action.payload.skill);
+      // update skill
+      skillsCopy[index] = {...action.payload};
+      // reassign skills state to updated copy
+      state.skills = skillsCopy;
+    },
+    deleteSkill: (state, action: PayloadAction<string>) => {
+      // filter out skill that matches payload
+      state.skills = [...state.skills].filter(skill => skill.skill !== action.payload)
+    },
   },
 });
 
 // extract reducer functions from the slice
-export const { setJobs, setSkills, addSkill } = appSlice.actions;
+export const { setJobs, setSkills, addSkill, updateSkill, deleteSkill } = appSlice.actions;
 
 // configure the Redux store using configureStore
 export const store = configureStore({
