@@ -4,7 +4,7 @@ import Searchbox from './components/Searchbox';
 import SkillsDisplay from './components/SkillsDisplay';
 import Skillsbox from './components/Skillsbox';
 import JobsTable from './components/JobsTable';
-import { JobItem, SkillItem } from './types';
+import { JobItem } from './types';
 
 const App = () => {
   // create an example array of JobItems
@@ -58,17 +58,6 @@ const App = () => {
         'Amazon.com, Inc. is an American multinational technology company based in Seattle, Washington, which focuses on e-commerce, cloud computing, digital streaming, and artificial intelligence.',
     },
   ];
-  // sample skills
-  const skills: SkillItem[] = [
-    { skill: 'Python', level: 'Senior' },
-    { skill: 'React', level: 'Mid' },
-    { skill: 'Django', level: 'Junior' },
-    { skill: 'Flask', level: 'Junior' },
-    { skill: 'Node.js', level: 'Mid' },
-    { skill: 'Express', level: 'Mid' },
-    { skill: 'MongoDB', level: 'Mid' },
-    { skill: 'PostgreSQL', level: 'Mid' },
-  ];
 
   return (
     <Stack
@@ -78,7 +67,7 @@ const App = () => {
       <Searchbox />
       <Divider />
       <Skillsbox />
-      <SkillsDisplay skills={skills} />
+      <SkillsDisplay />
       <Divider />
       <JobsTable jobs={jobs} />
     </Stack>

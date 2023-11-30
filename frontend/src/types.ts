@@ -17,3 +17,8 @@ export type JobItem = {
 export type SkillsDisplayProps = {
   skills: SkillItem[];
 };
+
+export interface AppState {
+  jobs: JobItem[];
+  skills: SkillItem[];
+}
