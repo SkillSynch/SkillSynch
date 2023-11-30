@@ -13,7 +13,7 @@ const apiID = process.env.adzunaID;
 const apiURL = 'https://api.adzuna.com/v1/api/jobs/us/search/1';
 const resultsPerPage = 10;
 // const page = 1; including the page in the apiURL for the timebeing. Need to implement pagination
-// ElephantSQL connection sstring (replace with credentials)
+// ElephantSQL connection string (replace with credentials)
 const connectionString = process.env.DATABASE_URI;
 
 // Create a PostgreSQL client
@@ -32,6 +32,14 @@ client.connect()
     .catch((err) => {
         console.log('Error connecting to the database: ', err.message)
     })
+
+app.get('/test', (req,res) => {
+    return 'test';
+})
+
+app.get('/', (req,res) => {
+    return 'test';
+})
 
 
 app.get('/', (req, res) => {
