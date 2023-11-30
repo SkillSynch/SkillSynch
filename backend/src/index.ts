@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
+import redisClient from '../redis/redisClient';
 
 const app = express();
 
@@ -22,8 +23,10 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-app.listen(3000, () => {
-  console.log('Server listening on port: 3000');
+Promise.all([redisClient.connect()]).then(() => {
+  app.listen(3000, () => {
+    console.log('Server listening on port: 3000');
+  });
 });
 
 export default app;
