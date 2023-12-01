@@ -1,11 +1,11 @@
-type AdzunaResponse = {
+export type AdzunaResponse = {
   mean: number;
   results: AdzunaJob[];
   count: number;
   __CLASS__: string;
 };
 
-type AdzunaJob = {
+export type AdzunaJob = {
   id: string;
   created: string;
   longitude: number;
@@ -34,7 +34,7 @@ type AdzunaJob = {
   __CLASS__: string;
 };
 
-type FrontEndFields = {
+export type FrontEndFields = {
   id: string;
   created: string;
   title: string;
@@ -46,7 +46,9 @@ type FrontEndFields = {
   contract_time: string;
 };
 
-function parseAdzunaResponse(response: AdzunaResponse): FrontEndFields[] {
+export function parseAdzunaResponse(
+  response: AdzunaResponse
+): FrontEndFields[] {
   const results = response.results;
   const parsedResults = results.map(
     (result): FrontEndFields => ({

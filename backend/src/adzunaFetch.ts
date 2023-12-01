@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
 
-async function fetchDescription(url: string): Promise<string> {
+export async function fetchDescription(url: string): Promise<string> {
   const response = await axios(url);
   const html = response.data;
   const dom = new JSDOM(html);
