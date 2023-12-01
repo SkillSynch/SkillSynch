@@ -9,17 +9,38 @@ require('dotenv').config()
 // @ts-ignore
 const openai = new OpenAI({ apiKey: process.env.openAIKey });
 
-async function AI() {
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {role: 'system', content: 'You are a technical recruiter design to output JSON.'},
-      {role: 'user', content: `Given the following job description, please respond in the following JSON format {techs: [array of tuple with two elements, name of the tech and minimum years of experience required], estimatedSalary: array of tuples with three elements, the location, the minimum estimated salary and the maximum estimated salary, level: choose between junior, mid, and senior}. If you can not provide the response in the format described, return the following JSON object { message: "unable to parse" }. Here is the job description: ${'jobDescription'}` } // need to get this job description from the database.
-    ],
-    model: 'gpt-3.5-turbo-1106',
-    response_format: { "type": "json_object" },
-  });
+const openAIController = {
+  // get match from openai
+  async parseJob() {
+    const completion = await openai.chat.completions.create({
+      messages: [
+        {role: 'system', content: 'You are a technical recruiter design to output JSON.'},
+        {role: 'user', content: `Given the following job description, please respond in the following JSON format {techs: [array of tuple with two elements, name of the tech and minimum years of experience required], estimatedSalary: array of tuples with three elements, the location, the minimum estimated salary and the maximum estimated salary, level: choose between junior, mid, and senior}. If you can not provide the response in the format described, return the following JSON object { message: "unable to parse" }. Here is the job description: ${'jobDescription'}` } // need to get this job description from the database.
+      ],
+      model: 'gpt-3.5-turbo-1106',
+      response_format: { "type": "json_object" },
+    });
 
-  console.log(completion.choices[0].message.content);
+    console.log(completion.choices[0].message.content);
+  },
+
+      // Create a new Job in the Database
+      async postParsedJob(req: any, res: any, next: any) {
+        const { item } = req.body;
+
+        if (!item)
+          return res.status(400).json({ error: 'Did not receive a Job'});
+
+        try {const newJob = new Job({
+          item,
+        });
+
+        const savedJob = await newJob.save();
+        res.local.savedJob = savedJob; // Store information for sending
+        next(); // go to the next middleware in the middleware chain
+
+        } catch (err){
+          next(res.status(400).json({error: 'failed to create new Job   ' + err}));
+        }
+      },
 }
-
-AI();

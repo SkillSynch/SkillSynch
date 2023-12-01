@@ -1,5 +1,5 @@
 require('dotenv').config()
-const path = require('path');
+const Job = require('../models/JobModel');
 
 const apiKey = process.env.adzunaKey;
 const apiID = process.env.adzunaID;
@@ -23,7 +23,7 @@ const adzunaController = {
         } catch (error) {
             next(res.status(500).json({error: 'adzuna get request query error'}));
         }
-    }
+    },
 }
 
 module.exports = adzunaController;
