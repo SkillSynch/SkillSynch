@@ -1,4 +1,7 @@
 **/**/node_modules
 **/**/dist
 **/**/.env
+<<<<<<< HEAD
 **/**/package-lock.json
+=======
+>>>>>>> dev
