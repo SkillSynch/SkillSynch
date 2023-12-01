@@ -49,6 +49,7 @@ app.use('/', express.static(path.join(__dirname, '../dist')));
 // app.use(express.static('../frontend/index.html'))
 
 app.get('/getjobids', adzunaController.getJobs, (req, res) => {
+  console.log('ran getjobids');
   res.status(200).json(res.locals.jobIds);
 });
 

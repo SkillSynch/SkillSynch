@@ -16,32 +16,20 @@ export default function Searchbox() {
     const titleValue = title.current!.value.replace(/\s/g, '%20');
     const locationValue = location.current!.value.replace(/\s/g, '%20');
 
-    console.log(titleValue, locationValue);
-
     // Fetch the job ids
     const adzunaApi = `http://localhost:3000/getjobids?title=${titleValue}&location=${locationValue}`;
 
     const adzunaResponse = await fetch(adzunaApi);
     const jobIds = (await adzunaResponse.json()) as string[];
 
-    // const openaiApi = 'http://localhost:3000/getJobDetails';
+    const openaiApi = 'http://localhost:3000/getJobDetails';
 
     // Put all the job ids in the queue
     for await (const jobId of jobIds) {
       // send the job id to open ai api
-      // const openaiResponse = await fetch(`${openaiApi}?jobid=${jobId}`);
-      // const jobItem = (await openaiResponse.json()) as JobItem;
-      // construct a job item from the jobids
-      const jobItem: JobItem = {
-        match: 1,
-        title: jobId,
-        company: 'Google',
-        location: 'New York, NY',
-        salary: '$150,000',
-        skills: [{ skill: 'React', level: 'Mid' }],
-        url: 'https://www.google.com',
-        about: 'Google',
-      };
+      const openaiResponse = await fetch(`${openaiApi}?jobid=${jobId}`);
+      const jobItem = (await openaiResponse.json()) as JobItem;
+
       dispatch(addJob(jobItem));
     }
   };
