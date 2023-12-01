@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Stack, Divider, Button, Popover } from '@mui/material';
 
-import { JobItem } from './JobsTable';
+import { JobItem } from '../types';
 
 export default function JobDetails({ jobItem }: { jobItem: JobItem }) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
