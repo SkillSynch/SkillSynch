@@ -2,7 +2,12 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
-import redisClient from '../redis/redisClient';
+import {
+  closeBrowser,
+  getJobDescription,
+  getJobHtml,
+  setUrl,
+} from '../playwright/playwright';
 require('dotenv').config();
 const { Client } = require('pg');
 const port = 3000;
@@ -57,6 +62,16 @@ app.get('/jobs', adzunaController.getJobs, (req, res) => {
   res.status(200);
 });
 
+app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
+  console.log(res.locals.html);
+  res.end();
+});
+
+app.get('/getdescription', setUrl, getJobDescription, (req, res) => {
+  console.log(res.locals.description);
+  res.end();
+});
+
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error',
@@ -68,10 +83,18 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-Promise.all([redisClient.connect()]).then(() => {
-  app.listen(3000, () => {
-    console.log('Server listening on port: 3000');
-  });
+// Promise.all([redisClient.connect()]).then(() => {
+//   app.listen(3000, () => {
+//     console.log('Server listening on port: 3000');
+//   });
+// });
+app.listen(3000, () => {
+  console.log('Server listening on port: 3000');
 });
+
+// close the playwrighte browser on exit
+process.on('exit', closeBrowser);
+process.on('SIGINT', closeBrowser);
+process.on('SIGTERM', closeBrowser);
 
 export default app;
