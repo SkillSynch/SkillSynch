@@ -72,6 +72,26 @@ export async function getJobDescription(
   const url = res.locals.url as string;
   const description = await getDescription(url);
   res.locals.description = description;
+  console.log('Scraped job description for', url);
+  next();
+}
+
+export async function getJobDescriptions(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const urls = res.locals.urls as string[];
+  const descriptions: string[] = []
+
+  for await (const url of urls) {
+    const description = await getDescription(url);
+    console.log('Scraped job description for', url);
+    if (description) {
+      descriptions.push(description)
+    }
+  }
+  res.locals.descriptions = descriptions;
   next();
 }
 

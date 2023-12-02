@@ -16,8 +16,10 @@ redisClient.on('error', err => {
 });
 
 // reconnecting
-redisClient.on('reconnecting', (reconnectParams) => {
-  console.log(`Redis client reconnecting (${reconnectParams.attempt} attempts)...`);
+redisClient.on('reconnecting', reconnectParams => {
+  console.log(
+    `Redis client reconnecting (${reconnectParams.attempt} attempts)...`
+  );
 });
 
 // successful reconnection
@@ -31,6 +33,6 @@ redisClient.on('end', () => {
 });
 
 // connect to redisClient
-redisClient.connect();
+// redisClient.connect();
 
 export default redisClient;

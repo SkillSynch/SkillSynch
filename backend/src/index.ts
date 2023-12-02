@@ -1,17 +1,19 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
-import path from 'path';
 import {
   closeBrowser,
   getJobDescription,
+  getJobDescriptions,
   getJobHtml,
   setUrl,
 } from '../playwright/playwright';
+import redisClient from '../redis/redisClient';
 require('dotenv').config();
 const { Client } = require('pg');
 const port = 3000;
 const adzunaController = require('./adzuna'); // import adzunaController
+import { summarizeDescription } from './openaiController';
 
 const app = express();
 
@@ -19,16 +21,9 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-const apiKey = process.env.adzunaKey;
-const apiID = process.env.adzunaID;
-const apiURL = 'https://api.adzuna.com/v1/api/jobs/us/search/1';
-const resultsPerPage = 10;
 // const page = 1; including the page in the apiURL for the timebeing. Need to implement pagination
 // ElephantSQL connection sstring (replace with credentials)
-const connectionString = process.env.DATABASE_URI;
-
-// serve static files from the dist directory
-app.use('/', express.static(path.join(__dirname, '../dist')));
+// const connectionString = process.env.DATABASE_URI;
 
 // // Create a PostgreSQL client
 // const client = new Client({
@@ -47,17 +42,12 @@ app.use('/', express.static(path.join(__dirname, '../dist')));
 //         console.log('Error connecting to the database: ', err.message)
 //     })
 
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../frontend/src', 'index.html'));
-// });
-
-// app.use(express.static('../frontend/index.html'))
-
 app.get('/getjobids', adzunaController.getJobs, (req, res) => {
   console.log('ran getjobids');
   res.status(200).json(res.locals.jobIds);
 });
 
+<<<<<<< HEAD
 app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
   console.log(res.locals.html);
   res.end();
@@ -67,6 +57,24 @@ app.get('/jobs',
 adzunaController.getJobs,
 
 (req, res) => {
+=======
+app.post(
+  '/getjobdetails',
+  adzunaController.getUrls,
+  getJobDescriptions,
+  summarizeDescription,
+  // getSkills,
+  // getMatchPercentage,
+  // combineResults,
+  (req, res) => {
+    res.status(200).end();
+    // res.status(200).json(res.locals.jobDetails);
+  }
+);
+
+// testing endpoints
+app.get('/jobs', adzunaController.getJobs, (req, res) => {
+>>>>>>> 2d6e14a43f3639ef3c8408835f2ee38d91230582
   res.status(200);
 });
 
@@ -75,7 +83,8 @@ app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
   res.end();
 });
 
-app.get('/getdescription', setUrl, getJobDescription, (req, res) => {
+app.get('/getdescription', setUrl, getJobDescription, summarizeDescription, (req, res) => {
+  console.log(typeof(res.locals.description));
   console.log(res.locals.description);
   res.end();
 });
@@ -91,9 +100,20 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
+<<<<<<< HEAD
 app.listen(3000, () => {
   console.log('Server listening on port: 3000');
+=======
+Promise.all([redisClient.connect()]).then(() => {
+  app.listen(3000, () => {
+    console.log('Server listening on port: 3000');
+  });
+>>>>>>> 2d6e14a43f3639ef3c8408835f2ee38d91230582
 });
+
+// app.listen(3000, () => {
+//   console.log('Server listening on port: 3000');
+// });
 
 // close the playwrighte browser on exit
 process.on('exit', closeBrowser);
