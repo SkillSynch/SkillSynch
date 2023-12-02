@@ -27,6 +27,7 @@ export default function Searchbox() {
     // Put all the job ids in the queue
     for await (const jobId of jobIds) {
       // Fetch the job details
+      console.log('Getting jobID: ', jobId)
       const response = await fetch(
         `http://localhost:3000/getjobdetails?jobid=${jobId}`
       );

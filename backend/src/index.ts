@@ -50,6 +50,7 @@ app.get(
   '/getjobdetails',
   adzunaController.getUrl,
   getJobDescription,
+  summarizeDescription,
   // getSkills,
   // getMatchPercentage,
   // combineResults,
@@ -86,14 +87,15 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-// Promise.all([redisClient.connect()]).then(() => {
-//   app.listen(3000, () => {
-//     console.log('Server listening on port: 3000');
-//   });
-// });
-app.listen(3000, () => {
-  console.log('Server listening on port: 3000');
+Promise.all([redisClient.connect()]).then(() => {
+  app.listen(3000, () => {
+    console.log('Server listening on port: 3000');
+  });
 });
+
+// app.listen(3000, () => {
+//   console.log('Server listening on port: 3000');
+// });
 
 // close the playwrighte browser on exit
 process.on('exit', closeBrowser);
