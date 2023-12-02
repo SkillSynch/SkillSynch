@@ -72,6 +72,7 @@ export async function getJobDescription(
   const url = res.locals.url as string;
   const description = await getDescription(url);
   res.locals.description = description;
+  console.log('Scraped job description for', url);
   next();
 }
 

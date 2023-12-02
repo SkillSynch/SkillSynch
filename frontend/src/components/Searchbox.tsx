@@ -26,23 +26,26 @@ export default function Searchbox() {
 
     // Put all the job ids in the queue
     for await (const jobId of jobIds) {
-      // // send the job id to open ai api
-      // const openaiResponse = await fetch(`${openaiApi}?jobid=${jobId}`);
-      // const jobItem = (await openaiResponse.json()) as JobItem;
+      // Fetch the job details
+      const response = await fetch(
+        `http://localhost:3000/getjobdetails?jobid=${jobId}`
+      );
+
+      // const jobItem = (await response.json()) as JobItem;
 
       // dummy jobItem to allow rendering on frontend
-      const jobItem: JobItem = {
-        match: 1,
-        title: jobId,
-        company: 'test',
-        location: 'test',
-        salary: 'test',
-        skills: [{skill: 'React', level: 'Junior'}],
-        url: 'test',
-        about: 'test',
-      };
+      // const jobItem: JobItem = {
+      //   match: 1,
+      //   title: jobId,
+      //   company: 'test',
+      //   location: 'test',
+      //   salary: 'test',
+      //   skills: [{skill: 'React', level: 'Junior'}],
+      //   url: 'test',
+      //   about: 'test',
+      // };
       // call addJob to update state
-      dispatch(addJob(jobItem));
+      // dispatch(addJob(jobItem));
     }
   };
 

@@ -1,7 +1,9 @@
-require('dotenv').config();
-const path = require('path');
-import { parseAdzunaResponse } from './adzunaParser';
+import dotenv from 'dotenv';
+import { NextFunction, Request, Response } from 'express';
 import redisClient from '../redis/redisClient';
+import { FrontEndFields, parseAdzunaResponse } from './adzunaParser';
+
+dotenv.config();
 
 const apiKey = process.env.adzunaKey;
 const apiID = process.env.adzunaID;
@@ -25,14 +27,14 @@ const adzunaController = {
       const cachedData: any = await redisClient.get(queryString);
 
       // if data is cached
-      if (cachedData){
+      if (cachedData) {
         console.log('in cache');
         // parse cachedData from string
         const parsedResults = JSON.parse(cachedData);
         // grab ids from parsedResults and assign to res.locals.
         res.locals['jobIds'] = parsedResults.map((job: any) => job.id);
 
-      // if data is not cached
+        // if data is not cached
       } else {
         console.log('not in cache');
         // get and parse data from adzuna
@@ -40,7 +42,11 @@ const adzunaController = {
         const data = await responses.json();
         const parsedResults = parseAdzunaResponse(data);
         // cache queryString/parsedResults combo in redis - combo to be removed from cache after 60 seconds
-        redisClient.setEx(queryString, 60, JSON.stringify(parsedResults));
+        redisClient.setEx(queryString, 600, JSON.stringify(parsedResults));
+        // separately cache individual jobids
+        parsedResults.forEach((job: FrontEndFields) => {
+          redisClient.setEx(job.id, 600, JSON.stringify(job));
+        });
         // grab ids from parsedResults and assign to res.locals.
         res.locals['jobIds'] = parsedResults.map((job: any) => job.id);
       }
@@ -50,6 +56,30 @@ const adzunaController = {
     } catch (error) {
       next(res.status(500).json({ error: 'adzuna get request query error' }));
     }
+  },
+
+  async getUrl(req: Request, res: Response, next: NextFunction) {
+    const jobId = req.query.jobid as string;
+
+    // look up jobId in redis
+    const jobDetails = await redisClient.get(jobId || 'Missing Job ID');
+
+    // if jobDetails is not in redis, return error
+    if (!jobDetails) {
+      return next({
+        status: 400,
+        log: 'adzunaController.getUrl: ERROR: Invalid jobId',
+        message: {
+          err: 'adzunaController.getUrl: ERROR: Invalid jobId',
+        },
+      });
+    }
+
+    // if jobDetails is found, parse jobDetails and save url to res.locals
+    const parsedJobDetails = JSON.parse(jobDetails) as FrontEndFields;
+    res.locals['url'] = parsedJobDetails.redirect_url;
+
+    return next();
   },
 };
 
