@@ -1,12 +1,13 @@
 import { Grid, Paper } from '@mui/material';
 import React from 'react';
-import Skillitem, { SkillitemProps } from './Skillitem';
+import Skillitem from './Skillitem';
+import { useSelector } from 'react-redux';
+import { AppState } from '../types'; 
 
-type SkillsDisplayProps = {
-  skills: SkillitemProps[];
-};
+export default function SkillsDisplay() {
+  // use useSelector to extract skills from the Redux store
+  const skills = useSelector((state: AppState) => state.skills);
 
-export default function SkillsDisplay({ skills }: SkillsDisplayProps) {
   return (
     <Paper sx={{ marginTop: '16px', marginBottom: '30px' }}>
       <Grid

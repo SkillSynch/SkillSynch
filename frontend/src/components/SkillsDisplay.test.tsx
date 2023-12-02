@@ -1,12 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import SkillsDisplay from './SkillsDisplay';
-import { SkillitemProps } from './Skillitem';
+import { SkillItem } from '../types';
 import { describe, it, expect } from 'vitest';
 
 describe('SkillsDisplay', () => {
   // sample skills
-  const skills: SkillitemProps[] = [
+  const skills: SkillItem[] = [
     { skill: 'Python', level: 'Senior' },
     { skill: 'React', level: 'Mid' },
     { skill: 'Django', level: 'Junior' },
@@ -16,9 +18,20 @@ describe('SkillsDisplay', () => {
     { skill: 'MongoDB', level: 'Mid' },
     { skill: 'PostgreSQL', level: 'Mid' },
   ];
+
+  // create a mock store with the initial state
+  const store = configureStore({
+    reducer: (state) => state, // dummy reducer
+    preloadedState: { skills: skills }, // initial state
+  });
+
   // test that the component renders the correct skills
   it('renders the correct number of skills', () => {
-    render(<SkillsDisplay skills={skills} />);
+    render(
+      <Provider store={store}>
+        <SkillsDisplay />
+      </Provider>
+    );
     expect(screen.queryByText('Python: Senior')).not.toBeNull();
     expect(screen.queryByText('React: Mid')).not.toBeNull();
     expect(screen.queryByText('Django: Junior')).not.toBeNull();

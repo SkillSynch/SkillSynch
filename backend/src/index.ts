@@ -2,11 +2,16 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
+import {
+  closeBrowser,
+  getJobDescription,
+  getJobHtml,
+  setUrl,
+} from '../playwright/playwright';
 require('dotenv').config();
 const { Client } = require('pg');
 const port = 3000;
 const adzunaController = require('./adzuna'); // import adzunaController
-import { setUrl, getJobHtml } from './jobDescription';
 
 const app = express();
 
@@ -48,6 +53,11 @@ app.use('/', express.static(path.join(__dirname, '../dist')));
 
 // app.use(express.static('../frontend/index.html'))
 
+app.get('/getjobids', adzunaController.getJobs, (req, res) => {
+  console.log('ran getjobids');
+  res.status(200).json(res.locals.jobIds);
+});
+
 app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
   console.log(res.locals.html);
   res.end();
@@ -58,6 +68,16 @@ adzunaController.getJobs,
 
 (req, res) => {
   res.status(200);
+});
+
+app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
+  console.log(res.locals.html);
+  res.end();
+});
+
+app.get('/getdescription', setUrl, getJobDescription, (req, res) => {
+  console.log(res.locals.description);
+  res.end();
 });
 
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -74,5 +94,10 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 app.listen(3000, () => {
   console.log('Server listening on port: 3000');
 });
+
+// close the playwrighte browser on exit
+process.on('exit', closeBrowser);
+process.on('SIGINT', closeBrowser);
+process.on('SIGTERM', closeBrowser);
 
 export default app;

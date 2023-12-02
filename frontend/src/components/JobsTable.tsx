@@ -9,14 +9,9 @@ import {
   Paper,
 } from '@mui/material';
 
-export type JobItem = {
-  match: number;
-  title: string;
-  company: string;
-  location: string;
-  salary: string;
-  skills: string[];
-};
+import { JobItem } from '../types';
+
+import JobDetails from './JobDetails';
 
 export default function JobsTable({ jobs }: { jobs: JobItem[] }) {
   return (
@@ -41,7 +36,9 @@ export default function JobsTable({ jobs }: { jobs: JobItem[] }) {
               <TableCell>{job.company}</TableCell>
               <TableCell>{job.location}</TableCell>
               <TableCell>{job.salary}</TableCell>
-              <TableCell>Details</TableCell>
+              <TableCell>
+                <JobDetails jobItem={job} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
