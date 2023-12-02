@@ -76,6 +76,25 @@ export async function getJobDescription(
   next();
 }
 
+export async function getJobDescriptions(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const urls = res.locals.urls as string[];
+  const descriptions: string[] = []
+
+  for await (const url of urls) {
+    const description = await getDescription(url);
+    console.log('Scraped job description for', url);
+    if (description) {
+      descriptions.push(description)
+    }
+  }
+  res.locals.descriptions = descriptions;
+  next();
+}
+
 export async function setUrl(req: Request, res: Response, next: NextFunction) {
   const url = `https://www.adzuna.com/details/4443767391?utm_medium=api&utm_source=5e7a40f2`;
   res.locals.url = url;

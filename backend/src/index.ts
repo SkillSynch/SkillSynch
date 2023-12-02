@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import {
   closeBrowser,
   getJobDescription,
+  getJobDescriptions,
   getJobHtml,
   setUrl,
 } from '../playwright/playwright';
@@ -46,16 +47,16 @@ app.get('/getjobids', adzunaController.getJobs, (req, res) => {
   res.status(200).json(res.locals.jobIds);
 });
 
-app.get(
+app.post(
   '/getjobdetails',
-  adzunaController.getUrl,
-  getJobDescription,
+  adzunaController.getUrls,
+  getJobDescriptions,
   summarizeDescription,
   // getSkills,
   // getMatchPercentage,
   // combineResults,
   (req, res) => {
-    res.end();
+    res.status(200).end();
     // res.status(200).json(res.locals.jobDetails);
   }
 );

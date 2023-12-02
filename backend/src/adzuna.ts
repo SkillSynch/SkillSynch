@@ -45,7 +45,8 @@ const adzunaController = {
         redisClient.setEx(queryString, 600, JSON.stringify(parsedResults));
         // separately cache individual jobids
         parsedResults.forEach((job: FrontEndFields) => {
-          redisClient.setEx(job.id, 600, JSON.stringify(job));
+          const jobIdString = job.id.toString();
+          redisClient.setEx(jobIdString, 600, JSON.stringify(job));
         });
         // grab ids from parsedResults and assign to res.locals.
         res.locals['jobIds'] = parsedResults.map((job: any) => job.id);
@@ -58,26 +59,41 @@ const adzunaController = {
     }
   },
 
-  async getUrl(req: Request, res: Response, next: NextFunction) {
-    const jobId = req.query.jobid as string;
+  async getUrls(req: Request, res: Response, next: NextFunction) {
+    // const jobId = req.query.jobid as string;
+    const jobIds = req.body.jobids as string[];
 
-    // look up jobId in redis
-    const jobDetails = await redisClient.get(jobId || 'Missing Job ID');
+    const urls: string[] = []
+
+    for await (const jobId of jobIds) {
+      // look up jobId in redis
+      const jobDetails = await redisClient.get(jobId.toString() || 'Missing Job ID');
+      // console.log('jobdetails', jobDetails);
+      if (jobDetails) {
+        const obj = JSON.parse(jobDetails)
+        // console.log('obj', obj)
+        const url = obj.redirect_url
+        console.log('url', url)
+        if (url.startsWith('https://www.adzuna.com/details/')) {
+          urls.push(url)
+        }
+      }
+    }
 
     // if jobDetails is not in redis, return error
-    if (!jobDetails) {
+    if (!urls.length) {
       return next({
-        status: 400,
-        log: 'adzunaController.getUrl: ERROR: Invalid jobId',
+        status: 401,
+        log: 'adzunaController.getUrls: ERROR: No valid job IDs',
         message: {
-          err: 'adzunaController.getUrl: ERROR: Invalid jobId',
+          err: 'adzunaController.getUrls: ERROR: No valid job IDs',
         },
       });
     }
 
     // if jobDetails is found, parse jobDetails and save url to res.locals
-    const parsedJobDetails = JSON.parse(jobDetails) as FrontEndFields;
-    res.locals['url'] = parsedJobDetails.redirect_url;
+    // res.locals['urls'] = urls;
+    res.locals.urls = urls
 
     return next();
   },
