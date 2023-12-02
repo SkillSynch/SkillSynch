@@ -85,10 +85,11 @@ export async function getJobDescriptions(
   const descriptions: string[] = []
 
   for await (const url of urls) {
-    const description = await getDescription(url);
+    const obj = JSON.parse(url);
+    const description = await getDescription(obj.url);
     console.log('Scraped job description for', url);
     if (description) {
-      descriptions.push(description)
+      descriptions.push(JSON.stringify({'jobId': obj.jobId, 'description': description}));
     }
   }
   res.locals.descriptions = descriptions;

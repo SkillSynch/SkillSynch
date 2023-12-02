@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-require('dotenv').config();
-const path = require('path');
-import { parseAdzunaResponse } from "./adzunaParser";
-import { fetchDescription } from "./adzunaFetch";
-import pool from "./db/database";
-=======
 import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
->>>>>>> 2d6e14a43f3639ef3c8408835f2ee38d91230582
 import redisClient from '../redis/redisClient';
 import { FrontEndFields, parseAdzunaResponse } from './adzunaParser';
 
@@ -25,6 +17,7 @@ const adzunaController = {
       // Extract parameters from the request query. Location doesn't seem to work (returns 400)
       // const { title, salaryMin, fullTime, skills } = req.query;
       const { title, location } = req.query;
+
 
       // Construct the URL with additional parameters. Location doesn't seem to work (returns 400)
       // const url = `${apiURL}?app_id=${apiID}&app_key=${apiKey}&results_per_page=${resultsPerPage}&what=${title}&what_and=${skills}&salary_min=${salaryMin}&full_time=${fullTime}`
@@ -83,7 +76,8 @@ const adzunaController = {
         const url = obj.redirect_url
         console.log('url', url)
         if (url.startsWith('https://www.adzuna.com/details/')) {
-          urls.push(url)
+          // urls.push(url)
+          urls.push(JSON.stringify({'jobId': jobId, 'url': url}));
         }
       }
     }

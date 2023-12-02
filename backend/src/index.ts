@@ -47,17 +47,6 @@ app.get('/getjobids', adzunaController.getJobs, (req, res) => {
   res.status(200).json(res.locals.jobIds);
 });
 
-<<<<<<< HEAD
-app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
-  console.log(res.locals.html);
-  res.end();
-});
-
-app.get('/jobs', 
-adzunaController.getJobs,
-
-(req, res) => {
-=======
 app.post(
   '/getjobdetails',
   adzunaController.getUrls,
@@ -74,7 +63,6 @@ app.post(
 
 // testing endpoints
 app.get('/jobs', adzunaController.getJobs, (req, res) => {
->>>>>>> 2d6e14a43f3639ef3c8408835f2ee38d91230582
   res.status(200);
 });
 
@@ -100,15 +88,10 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-<<<<<<< HEAD
-app.listen(3000, () => {
-  console.log('Server listening on port: 3000');
-=======
 Promise.all([redisClient.connect()]).then(() => {
   app.listen(3000, () => {
     console.log('Server listening on port: 3000');
   });
->>>>>>> 2d6e14a43f3639ef3c8408835f2ee38d91230582
 });
 
 // app.listen(3000, () => {
