@@ -8,7 +8,7 @@ import { AppState } from './types';
 import { useSelector } from 'react-redux';
 
 const App = () => {
-  const jobs = useSelector((state: AppState) => state.jobs);
+  const reduxState = useSelector((state: AppState) => state);
   // create an example array of JobItems
   // const jobs: JobItem[] = [
   //   {
@@ -71,7 +71,7 @@ const App = () => {
       <Skillsbox />
       <SkillsDisplay />
       <Divider />
-      <JobsTable jobs={jobs} />
+      <JobsTable jobs={reduxState.jobs} skills={reduxState.skills} />
     </Stack>
   );
 };

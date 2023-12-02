@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import JobsTable from './JobsTable';
-import { JobItem } from '../types'
+import { JobItem, SkillItem } from '../types';
 
 describe('JobsTable', () => {
   const jobs: JobItem[] = [
@@ -37,21 +37,27 @@ describe('JobsTable', () => {
         'Google is a multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware.',
     },
   ];
+  // sample skillItems array
+  const skills: SkillItem[] = [
+    { skill: 'React', level: 'Mid' },
+    { skill: 'TypeScript', level: 'Mid' },
+    { skill: 'Node.js', level: 'Mid' },
+  ];
   // test that the JobsTable component renders a table with the correct number of rows
   it('renders a table with the correct number of rows', () => {
-    render(<JobsTable jobs={jobs} />);
+    render(<JobsTable jobs={jobs} skills={skills} />);
     expect(screen.getAllByRole('row')).toHaveLength(3);
   });
 
   // test that the JobsTable component renders a table with the correct number of columns
   it('renders a table with the correct number of columns', () => {
-    render(<JobsTable jobs={jobs} />);
+    render(<JobsTable jobs={jobs} skills={skills} />);
     expect(screen.getAllByRole('columnheader')).toHaveLength(6);
   });
 
   // test that the JobsTable component renders the correct values
   it('renders the correct values', () => {
-    render(<JobsTable jobs={jobs} />);
+    render(<JobsTable jobs={jobs} skills={skills} />);
     expect(screen.queryByText('Senior Software Engineer')).not.toBeNull();
     expect(screen.queryByText('Apple')).not.toBeNull();
     expect(screen.queryByText('San Francisco')).not.toBeNull();
