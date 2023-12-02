@@ -30,7 +30,4 @@ redisClient.on('end', () => {
   console.log('Redis client connection closed');
 });
 
-// connect to redisClient
-redisClient.connect();
-
 export default redisClient;

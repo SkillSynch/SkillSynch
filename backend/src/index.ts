@@ -8,10 +8,12 @@ import {
   getJobHtml,
   setUrl,
 } from '../playwright/playwright';
+import redisClient from '../redis/redisClient';
 require('dotenv').config();
 const { Client } = require('pg');
 const port = 3000;
 const adzunaController = require('./adzuna'); // import adzunaController
+import { summarizeDescription } from './openaiController';
 
 const app = express();
 
@@ -67,7 +69,8 @@ app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
   res.end();
 });
 
-app.get('/getdescription', setUrl, getJobDescription, (req, res) => {
+app.get('/getdescription', setUrl, getJobDescription, summarizeDescription, (req, res) => {
+  console.log(typeof(res.locals.description));
   console.log(res.locals.description);
   res.end();
 });
@@ -83,14 +86,15 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-// Promise.all([redisClient.connect()]).then(() => {
-//   app.listen(3000, () => {
-//     console.log('Server listening on port: 3000');
-//   });
-// });
-app.listen(3000, () => {
-  console.log('Server listening on port: 3000');
+Promise.all([redisClient.connect()]).then(() => {
+  app.listen(3000, () => {
+    console.log('Server listening on port: 3000');
+  });
 });
+
+// app.listen(3000, () => {
+//   console.log('Server listening on port: 3000');
+// });
 
 // close the playwrighte browser on exit
 process.on('exit', closeBrowser);
