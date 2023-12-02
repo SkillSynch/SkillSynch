@@ -1,5 +1,8 @@
 require('dotenv').config()
 const path = require('path');
+import { parseAdzunaResponse } from "./adzunaParser";
+import { fetchDescription } from "./adzunaFetch";
+import pool from "./db/database";
 
 const apiKey = process.env.adzunaKey;
 const apiID = process.env.adzunaID;
@@ -19,6 +22,14 @@ const adzunaController = {
 
             const responses = await fetch(url)
             const data = await responses.json();
+            const jobs = await parseAdzunaResponse(data);
+            const query = 'INSERT INTO job_postings(job_id, posted, salary_start, salary_end, location, type_remote, level) VALUES'
+            const description = await fetchDescription(jobs[0].redirect_url)
+            // jobs.forEach(async (job) => {
+            //     console.log(job.redirect_url);
+            //     const description = await fetchDescription(job.redirect_url);
+            //     console.log(description);
+            // })
             res.json(data);
         } catch (error) {
             next(res.status(500).json({error: 'adzuna get request query error'}));

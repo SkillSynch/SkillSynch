@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import pool from '../db/database';
+import pool from './db/database';
 const OpenAI = require('openai');
 require('dotenv').config()
 

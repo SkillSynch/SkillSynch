@@ -2,17 +2,17 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
+require('dotenv').config();
+const { Client } = require('pg');
 const port = 3000;
 const adzunaController = require('./adzuna'); // import adzunaController
-import openaiRouter from './routes/openaiRoutes';
+import { setUrl, getJobHtml } from './jobDescription';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-
-app.use('/getMatches', openaiRouter);
 
 const apiKey = process.env.adzunaKey;
 const apiID = process.env.adzunaID;
@@ -24,6 +24,41 @@ const connectionString = process.env.DATABASE_URI;
 
 // serve static files from the dist directory
 app.use('/', express.static(path.join(__dirname, '../dist')));
+
+// // Create a PostgreSQL client
+// const client = new Client({
+//     connectionString: connectionString,
+//     ssl: {
+//         rejectUnauthorized: false,
+//     },
+// });
+
+// // Connect to database
+// client.connect()
+//     .then(() => {
+//         console.log('Connected to the database');
+//     })
+//     .catch((err: { message: any; }) => {
+//         console.log('Error connecting to the database: ', err.message)
+//     })
+
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/src', 'index.html'));
+// });
+
+// app.use(express.static('../frontend/index.html'))
+
+app.get('/getHtml', setUrl, getJobHtml, (req, res) => {
+  console.log(res.locals.html);
+  res.end();
+});
+
+app.get('/jobs', 
+adzunaController.getJobs,
+
+(req, res) => {
+  res.status(200);
+});
 
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const defaultErr = {
