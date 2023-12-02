@@ -14,6 +14,7 @@ const { Client } = require('pg');
 const port = 3000;
 const adzunaController = require('./adzuna'); // import adzunaController
 import { summarizeDescription } from './openaiController';
+import { FrontEndFields } from './adzunaParser';
 
 const app = express();
 
@@ -56,8 +57,23 @@ app.post(
   // getMatchPercentage,
   // combineResults,
   (req, res) => {
-    res.status(200).end();
-    // res.status(200).json(res.locals.jobDetails);
+    const jobDetails = res.locals.jobDetails as FrontEndFields;
+    const openai_response = res.locals.openai_response;
+    jobDetails.skills = openai_response["techs"];
+    jobDetails.salary_min = openai_response["estimatedSalary"][0][1];
+    jobDetails.salary_max = openai_response["estimatedSalary"][0][2];
+    const result = {
+      match: 1,
+      title: jobDetails.title,
+      company: jobDetails.company,
+      location: openai_response["estimatedSalary"][0][0],
+      salary: jobDetails.salary_max,
+      skills: jobDetails.skills.map((skill:any) => {return {skill: skill[0], level: skill[1]}}),
+      url: jobDetails.redirect_url
+    };
+
+    // res.status(200).end();
+    res.status(200).json(result);
   }
 );
 

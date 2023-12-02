@@ -44,6 +44,7 @@ export type FrontEndFields = {
   location: string;
   company: string;
   contract_time: string;
+  skills?: any
 };
 
 export function parseAdzunaResponse(

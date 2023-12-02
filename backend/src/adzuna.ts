@@ -72,12 +72,13 @@ const adzunaController = {
       // console.log('jobdetails', jobDetails);
       if (jobDetails) {
         const obj = JSON.parse(jobDetails)
-        // console.log('obj', obj)
+        res.locals.jobDetails = obj;        // console.log('obj', obj)
         const url = obj.redirect_url
         console.log('url', url)
         if (url.startsWith('https://www.adzuna.com/details/')) {
-          // urls.push(url)
-          urls.push(JSON.stringify({'jobId': jobId, 'url': url}));
+          urls.push(url)
+          res.locals.jobId = jobId;
+          // urls.push(JSON.stringify({'jobId': jobId, 'url': url}));
         }
       }
     }

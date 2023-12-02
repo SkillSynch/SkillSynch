@@ -4,7 +4,8 @@ require('dotenv').config()
 const openai = new OpenAI({ apiKey: process.env.openAIKey });
 
 export async function summarizeDescription(req: Request, res: Response, next: NextFunction) {
-    const descriptions = JSON.parse(res.locals.descriptions).description as string[];
+    const descriptions = res.locals.descriptions as string[];
+    const summary : string[] = [];
     
     const completion = await openai.chat.completions.create({
       messages: [
@@ -38,7 +39,15 @@ export async function summarizeDescription(req: Request, res: Response, next: Ne
       model: 'gpt-3.5-turbo-1106',
       response_format: { "type": "json_object" },
     });
-    console.log(completion.choices[0].message.content);
+
+    const openai_response = completion.choices[0].message.content;
+
+    if (openai_response.message) {
+      return next({'status': 400});
+    }
+
+    res.locals.openai_response = openai_response;
+
     return next();
   }
 
