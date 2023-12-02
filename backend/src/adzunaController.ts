@@ -1,5 +1,6 @@
 require('dotenv').config()
 const Job = require('../models/JobModel');
+const description = require('./adzunaFetch.ts')
 
 const apiKey = process.env.adzunaKey;
 const apiID = process.env.adzunaID;
@@ -16,6 +17,8 @@ const adzunaController = {
 
             // Construct the URL with additional parameters. Location doesn't seem to work (returns 400)
             const url = `${apiURL}?app_id=${apiID}&app_key=${apiKey}&results_per_page=${resultsPerPage}&what=${title}&what_and=${skills}&salary_min=${salaryMin}&full_time=${fullTime}`
+
+
 
             const responses = await fetch(url)
             const data = await responses.json();
