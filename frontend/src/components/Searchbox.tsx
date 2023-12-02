@@ -1,18 +1,16 @@
 import { Box, Button, Grid, TextField } from '@mui/material';
 import React, { useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { addJob } from '../redux/store';
-import { AppState, JobItem } from '../types';
+import { JobItem } from '../types';
+import { useDispatch } from 'react-redux';
 
 export default function Searchbox() {
   const title = useRef<null | HTMLInputElement>(null);
   const location = useRef<null | HTMLInputElement>(null);
+  const dispatch = useDispatch();
 
   const handleSearchClick = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // grab skills state from redux store
-    const skills = useSelector((state: AppState) => state.skills)
 
     const titleValue = title.current!.value.replace(/\s/g, '%20');
     const locationValue = location.current!.value.replace(/\s/g, '%20');
@@ -23,7 +21,7 @@ export default function Searchbox() {
     const adzunaResponse = await fetch(adzunaApi);
     const jobIds = (await adzunaResponse.json()) as string[];
 
-    let results = 0
+    let results = 0;
 
     // Put all the job ids in the queue
     for await (const jobId of jobIds) {
@@ -31,36 +29,40 @@ export default function Searchbox() {
         break;
       }
       // Fetch the job details
-      console.log('Getting jobID: ', jobId)
+      // console.log('Getting jobID: ', jobId);
       const response = await fetch('http://localhost:3000/getjobdetails', {
         method: 'POST',
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
         },
-        body: JSON.stringify({jobids: [jobId]})
-      })
+        body: JSON.stringify({ jobids: [jobId] }),
+      });
 
       // handle status 401 on response
       if (response.status === 200) {
-        results += 1
+        results += 1;
       }
 
-      // const jobItem = (await response.json()) as JobItem;
+      const jobItem = (await response.json()) as JobItem;
 
-      // dummy jobItem to allow rendering on frontend
-      // const jobItem: JobItem = {
-      //   match: 1,
-      //   title: jobId,
-      //   company: 'test',
-      //   location: 'test',
-      //   salary: 'test',
-      //   skills: [{skill: 'React', level: 'Junior'}],
-      //   url: 'test',
-      //   about: 'test',
-      // };
-      // call addJob to update state
-      // dispatch(addJob(jobItem));
+      dispatch(addJob(jobItem));
     }
+    // dummy jobItem to allow rendering on frontend
+    // const jobItem: JobItem = {
+    //   match: 1,
+    //   title: 'something',
+    //   company: 'test',
+    //   location: 'test',
+    //   salary: 'test',
+    //   skills: [
+    //     { skill: 'React', level: 'Junior' },
+    //     { skill: 'Redux', level: 'Junior' },
+    //   ],
+    //   url: 'test',
+    //   about: 'test',
+    // };
+    // // call addJob to update state
+    // dispatch(addJob(jobItem));
   };
 
   return (
