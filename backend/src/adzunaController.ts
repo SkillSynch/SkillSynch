@@ -23,6 +23,7 @@ const adzunaController = {
             const responses = await fetch(url)
             const data = await responses.json();
             res.json(data);
+            next();
         } catch (error) {
             next(res.status(500).json({error: 'adzuna get request query error'}));
         }
