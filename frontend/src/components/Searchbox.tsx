@@ -22,14 +22,26 @@ export default function Searchbox() {
     const adzunaResponse = await fetch(adzunaApi);
     const jobIds = (await adzunaResponse.json()) as string[];
 
-    const openaiApi = 'http://localhost:3000/getJobDetails';
+    // const openaiApi = 'http://localhost:3000/getJobDetails';
 
     // Put all the job ids in the queue
     for await (const jobId of jobIds) {
-      // send the job id to open ai api
-      const openaiResponse = await fetch(`${openaiApi}?jobid=${jobId}`);
-      const jobItem = (await openaiResponse.json()) as JobItem;
+      // // send the job id to open ai api
+      // const openaiResponse = await fetch(`${openaiApi}?jobid=${jobId}`);
+      // const jobItem = (await openaiResponse.json()) as JobItem;
 
+      // dummy jobItem to allow rendering on frontend
+      const jobItem: JobItem = {
+        match: 1,
+        title: jobId,
+        company: 'test',
+        location: 'test',
+        salary: 'test',
+        skills: [{skill: 'React', level: 'Junior'}],
+        url: 'test',
+        about: 'test',
+      };
+      // call addJob to update state
       dispatch(addJob(jobItem));
     }
   };
